@@ -13,7 +13,26 @@ export const citiesApi = createApi({
 				body,
 			}),
 		}),
+		getAllCountries: builder.query({
+			query: () => ({
+				url: "/countries/population",
+				method: "GET",
+			}),
+			transformResponse: (response) => {
+				return response.data.map((country) => {
+					const totalPopulation = country.populationCounts.reduce(
+						(sum, yearData) => sum + yearData.value,
+						0
+					);
+					return {
+						...country,
+						totalPopulation,
+					};
+				});
+			},
+		}),
 	}),
 });
 
-export const { useGetCityPopulationMutation } = citiesApi;
+export const { useGetCityPopulationMutation, useGetAllCountriesQuery } =
+	citiesApi;
