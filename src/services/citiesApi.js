@@ -31,8 +31,21 @@ export const citiesApi = createApi({
 				});
 			},
 		}),
+		getStates: builder.mutation({
+			query: (body) => ({
+				url: "/countries/population/cities/filter",
+				method: "POST",
+				body, // expects { limit, order, orderBy, country }
+			}),
+			transformResponse: (response) => {
+				return response.data; // Adjust based on the actual response structure
+			},
+		}),
 	}),
 });
 
-export const { useGetCityPopulationMutation, useGetAllCountriesQuery } =
-	citiesApi;
+export const {
+	useGetCityPopulationMutation,
+	useGetAllCountriesQuery,
+	useGetStatesMutation, // Add this export
+} = citiesApi;

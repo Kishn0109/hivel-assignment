@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import * as d3 from "d3";
 
-const PopulationChart = ({ data }) => {
+const PopulationChart = ({ data, onBarClick }) => {
 	const svgRef = useRef();
 	console.log(data, "data");
 	useEffect(() => {
@@ -40,7 +40,7 @@ const PopulationChart = ({ data }) => {
 		const y = d3
 			.scaleLinear()
 			.range([height, 0])
-			.domain([0, d3.max(data, (d) => d.totalPopulation)]);
+			.domain([0, d3.max(data, (d) => d.totalPopulation)]); // In the click handler:
 
 		// Modified X axis
 		svg
@@ -92,6 +92,12 @@ const PopulationChart = ({ data }) => {
 			.on("mouseout", function () {
 				d3.select(this).attr("fill", "#69b3a2");
 				svg.selectAll(".tooltip").remove();
+			}) // Add click handler here
+			.on("click", function (event, d) {
+				onBarClick?.({
+					country: d.country,
+					population: d.totalPopulation,
+				});
 			});
 
 		// Add labels

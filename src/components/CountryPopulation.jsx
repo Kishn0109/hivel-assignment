@@ -1,9 +1,16 @@
 import React from "react";
-import { useGetAllCountriesQuery } from "../services/citiesApi";
+import {
+	useGetAllCountriesQuery,
+	useGetStatesMutation,
+} from "../services/citiesApi";
 import PopulationChart from "./PopulationChart";
+import { STAGE } from "../constant";
 
-const CityPopulation = () => {
-	const { data: countries } = useGetAllCountriesQuery();
+const CityPopulation = ({ setStage }) => {
+	const { data: countries, isLoading } = useGetAllCountriesQuery();
+
+	// Later in your code:
+
 	if (isLoading) {
 		return <div>Loading...</div>;
 	}
@@ -19,7 +26,15 @@ const CityPopulation = () => {
 				marginRight: "auto",
 				marginLeft: "auto",
 			}}>
-			<PopulationChart data={countries} />
+			<PopulationChart
+				data={countries}
+				onBarClick={(barData) => {
+					setStage({
+						name: STAGE.STATE,
+						value: barData.country,
+					});
+				}}
+			/>
 		</div>
 	);
 };
