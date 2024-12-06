@@ -25,10 +25,6 @@ export default function StatePopulation() {
 		return <>State not found</>;
 	}
 
-	if (isLoading) {
-		return <div>Loading...</div>;
-	}
-
 	return (
 		<div
 			style={{
@@ -41,12 +37,17 @@ export default function StatePopulation() {
 				marginRight: "auto",
 				marginLeft: "auto",
 			}}>
-			<PopulationChart
-				data={data}
-				onBarClick={(barData) => {
-					navigate(`/country/${country}/state/${barData.name}`);
-				}}
-			/>
+			{isLoading ? (
+				<span>Loading...</span>
+			) : (
+				<PopulationChart
+					data={data}
+					label='Cities'
+					onBarClick={(barData) => {
+						navigate(`/country/${country}/state/${barData.name}`);
+					}}
+				/>
+			)}
 		</div>
 	);
 }

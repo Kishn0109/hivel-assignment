@@ -28,6 +28,7 @@ const CountryPopulation = () => {
 				onBarClick={(barData) => {
 					navigate(`/country/${barData.name}`);
 				}}
+				label='Countries'
 			/>
 		</div>
 	);

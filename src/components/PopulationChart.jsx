@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import * as d3 from "d3";
 
-const PopulationChart = ({ data, onBarClick }) => {
+const PopulationChart = ({ data, onBarClick, label = "" }) => {
 	const svgRef = useRef();
 	console.log(data, "data");
 	useEffect(() => {
@@ -114,7 +114,7 @@ const PopulationChart = ({ data, onBarClick }) => {
 				`translate(${width / 2}, ${height + margin.bottom - 10})`
 			)
 			.style("text-anchor", "middle")
-			.text("Countries");
+			.text(label);
 	}, [data]);
 
 	return (
