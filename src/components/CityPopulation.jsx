@@ -24,17 +24,7 @@ const CityPopulation = () => {
 	}
 
 	return (
-		<div
-			style={{
-				width: "100vw",
-				height: "80vh",
-				display: "flex",
-				alignItems: "center",
-				justifyContent: "center",
-				border: "2px solid red",
-				marginRight: "auto",
-				marginLeft: "auto",
-			}}>
+		<>
 			{isLoading ? (
 				<div>Loading...</div>
 			) : (
@@ -46,7 +36,7 @@ const CityPopulation = () => {
 					label='Cities'
 				/>
 			)}
-		</div>
+		</>
 	);
 };
 

@@ -12,17 +12,7 @@ const CountryPopulation = () => {
 	}
 
 	return (
-		<div
-			style={{
-				width: "100vw",
-				height: "80vh",
-				display: "flex",
-				alignItems: "center",
-				justifyContent: "center",
-				border: "2px solid red",
-				marginRight: "auto",
-				marginLeft: "auto",
-			}}>
+		<>
 			<PopulationChart
 				data={countries}
 				onBarClick={(barData) => {
@@ -30,7 +20,7 @@ const CountryPopulation = () => {
 				}}
 				label='Countries'
 			/>
-		</div>
+		</>
 	);
 };
 
