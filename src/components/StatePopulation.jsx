@@ -1,12 +1,14 @@
 import React, { useEffect } from "react";
-import { useGetStatesMutation } from "../services/citiesApi";
+import { useGetCityPopulationMutation } from "../services/citiesApi";
+import PopulationChart from "./PopulationChart";
 
 export default function StatePopulation({ value }) {
-	const [getState, { data, status }] = useGetStatesMutation();
+	const [getState, { data, status, isLoading }] =
+		useGetCityPopulationMutation();
 
 	const fetchStates = async (country) => {
 		try {
-			const states = await getState({ country: "East Asia" });
+			const states = await getState({ country: country });
 			console.log(states);
 		} catch (error) {
 			console.error("Failed to fetch states:", error);
@@ -18,6 +20,9 @@ export default function StatePopulation({ value }) {
 	}, []);
 	if (status === 404) {
 		return <>State not found</>;
+	}
+	if (isLoading) {
+		return <div>Loading...</div>;
 	}
 	return (
 		<div
@@ -31,15 +36,15 @@ export default function StatePopulation({ value }) {
 				marginRight: "auto",
 				marginLeft: "auto",
 			}}>
-			{/* <PopulationChart
-				data={states}
+			<PopulationChart
+				data={data}
 				onBarClick={(barData) => {
 					setStage({
 						name: STAGE.STATE,
 						value: barData.country,
 					});
 				}}
-			/> */}
+			/>
 		</div>
 	);
 }

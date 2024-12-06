@@ -8,10 +8,21 @@ export const citiesApi = createApi({
 	endpoints: (builder) => ({
 		getCityPopulation: builder.mutation({
 			query: (body) => ({
-				url: "/countries/population/cities",
+				url: "/countries/population/cities/filter",
 				method: "POST",
 				body,
 			}),
+			transformResponse: (response) => {
+				return response.data.map((city) => {
+					const totalPopulation = city.populationCounts[0].value;
+
+					return {
+						...city,
+						name: city.city,
+						totalPopulation,
+					};
+				});
+			},
 		}),
 		getAllCountries: builder.query({
 			query: () => ({
@@ -20,32 +31,18 @@ export const citiesApi = createApi({
 			}),
 			transformResponse: (response) => {
 				return response.data.map((country) => {
-					const totalPopulation = country.populationCounts.reduce(
-						(sum, yearData) => sum + yearData.value,
-						0
-					);
+					const totalPopulation = Number(country.populationCounts[0].value);
+					console.log(totalPopulation, "totalPopulation");
 					return {
 						...country,
+						name: country.country,
 						totalPopulation,
 					};
 				});
 			},
 		}),
-		getStates: builder.mutation({
-			query: (body) => ({
-				url: "/countries/population/cities/filter",
-				method: "POST",
-				body, // expects { limit, order, orderBy, country }
-			}),
-			transformResponse: (response) => {
-				return response.data; // Adjust based on the actual response structure
-			},
-		}),
 	}),
 });
 
-export const {
-	useGetCityPopulationMutation,
-	useGetAllCountriesQuery,
-	useGetStatesMutation, // Add this export
-} = citiesApi;
+export const { useGetCityPopulationMutation, useGetAllCountriesQuery } =
+	citiesApi;

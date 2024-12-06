@@ -12,7 +12,7 @@ const PopulationChart = ({ data, onBarClick }) => {
 
 		// Increased dimensions and margins
 		const margin = { top: 20, right: 50, bottom: 120, left: 120 };
-		const width = 2000 - margin.left - margin.right; // Increased width
+		const width = 3000 - margin.left - margin.right; // Increased width even more
 		const height = 600 - margin.top - margin.bottom; // Increased height
 
 		// Create SVG container with dynamic width
@@ -34,8 +34,8 @@ const PopulationChart = ({ data, onBarClick }) => {
 		const x = d3
 			.scaleBand()
 			.range([0, width])
-			.domain(data.map((d) => d.country))
-			.padding(0.2); // Increased padding between bars
+			.domain(data.map((d) => d.name))
+			.padding(0.4); // Increased padding between bars
 
 		const y = d3
 			.scaleLinear()
@@ -71,7 +71,7 @@ const PopulationChart = ({ data, onBarClick }) => {
 			.data(data)
 			.enter()
 			.append("rect")
-			.attr("x", (d) => x(d.country))
+			.attr("x", (d) => x(d.name))
 			.attr("y", (d) => y(d.totalPopulation))
 			.attr("width", x.bandwidth())
 			.attr("height", (d) => height - y(d.totalPopulation))
@@ -84,7 +84,7 @@ const PopulationChart = ({ data, onBarClick }) => {
 				svg
 					.append("text")
 					.attr("class", "tooltip")
-					.attr("x", x(d.country) + x.bandwidth() / 2)
+					.attr("x", x(d.name) + x.bandwidth() / 2)
 					.attr("y", y(d.totalPopulation) - 5)
 					.attr("text-anchor", "middle")
 					.text(d3.format(".2s")(d.totalPopulation));
@@ -94,10 +94,7 @@ const PopulationChart = ({ data, onBarClick }) => {
 				svg.selectAll(".tooltip").remove();
 			}) // Add click handler here
 			.on("click", function (event, d) {
-				onBarClick?.({
-					country: d.country,
-					population: d.totalPopulation,
-				});
+				onBarClick?.(d);
 			});
 
 		// Add labels

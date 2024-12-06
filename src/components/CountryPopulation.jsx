@@ -1,8 +1,5 @@
 import React from "react";
-import {
-	useGetAllCountriesQuery,
-	useGetStatesMutation,
-} from "../services/citiesApi";
+import { useGetAllCountriesQuery } from "../services/citiesApi";
 import PopulationChart from "./PopulationChart";
 import { STAGE } from "../constant";
 
@@ -31,7 +28,7 @@ const CityPopulation = ({ setStage }) => {
 				onBarClick={(barData) => {
 					setStage({
 						name: STAGE.STATE,
-						value: barData.country,
+						value: barData.name,
 					});
 				}}
 			/>
