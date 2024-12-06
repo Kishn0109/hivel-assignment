@@ -1,16 +1,16 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import { useGetAllCountriesQuery } from "../services/citiesApi";
 import PopulationChart from "./PopulationChart";
-import { STAGE } from "../constant";
 
-const CityPopulation = ({ setStage }) => {
+const CountryPopulation = () => {
+	const navigate = useNavigate();
 	const { data: countries, isLoading } = useGetAllCountriesQuery();
-
-	// Later in your code:
 
 	if (isLoading) {
 		return <div>Loading...</div>;
 	}
+
 	return (
 		<div
 			style={{
@@ -26,14 +26,11 @@ const CityPopulation = ({ setStage }) => {
 			<PopulationChart
 				data={countries}
 				onBarClick={(barData) => {
-					setStage({
-						name: STAGE.STATE,
-						value: barData.name,
-					});
+					navigate(`/country/${barData.name}`);
 				}}
 			/>
 		</div>
 	);
 };
 
-export default CityPopulation;
+export default CountryPopulation;

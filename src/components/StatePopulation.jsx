@@ -1,29 +1,34 @@
 import React, { useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import { useGetCityPopulationMutation } from "../services/citiesApi";
 import PopulationChart from "./PopulationChart";
 
-export default function StatePopulation({ value }) {
+export default function StatePopulation() {
+	const { country } = useParams();
+	const navigate = useNavigate();
 	const [getState, { data, status, isLoading }] =
 		useGetCityPopulationMutation();
 
-	const fetchStates = async (country) => {
+	const fetchStates = async () => {
 		try {
-			const states = await getState({ country: country });
-			console.log(states);
+			await getState({ country });
 		} catch (error) {
 			console.error("Failed to fetch states:", error);
 		}
 	};
-	console.log(data, "data");
+
 	useEffect(() => {
-		fetchStates(value);
-	}, []);
+		fetchStates();
+	}, [country]);
+
 	if (status === 404) {
 		return <>State not found</>;
 	}
+
 	if (isLoading) {
 		return <div>Loading...</div>;
 	}
+
 	return (
 		<div
 			style={{
@@ -39,10 +44,7 @@ export default function StatePopulation({ value }) {
 			<PopulationChart
 				data={data}
 				onBarClick={(barData) => {
-					setStage({
-						name: STAGE.STATE,
-						value: barData.country,
-					});
+					navigate(`/country/${country}/state/${barData.name}`);
 				}}
 			/>
 		</div>
