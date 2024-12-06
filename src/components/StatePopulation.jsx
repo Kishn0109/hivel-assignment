@@ -44,7 +44,7 @@ export default function StatePopulation() {
 					data={data}
 					label='Cities'
 					onBarClick={(barData) => {
-						navigate(`/country/${country}/state/${barData.name}`);
+						navigate(`/country/${country}/city/${barData.name}`);
 					}}
 				/>
 			)}

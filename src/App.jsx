@@ -4,22 +4,23 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { store } from "./store/store";
 import CountryPopulation from "./components/CountryPopulation";
 import StatePopulation from "./components/StatePopulation";
-import Breadcrumb from "./components/Breadcrumb";
 import CityPopulation from "./components/CityPopulation";
+import Layout from "./components/Layout";
 
 function App() {
 	return (
 		<Provider store={store}>
 			<BrowserRouter>
 				<div className='container'>
-					<Breadcrumb />
 					<Routes>
-						<Route path='/' element={<CountryPopulation />} />
-						<Route path='/country/:country' element={<StatePopulation />} />
-						<Route
-							path='/country/:country/state/:state'
-							element={<CityPopulation />}
-						/>
+						<Route element={<Layout />}>
+							<Route path='/' element={<CountryPopulation />} />
+							<Route path='/country/:country' element={<StatePopulation />} />
+							<Route
+								path='/country/:country/city/:city'
+								element={<CityPopulation />}
+							/>
+						</Route>
 					</Routes>
 				</div>
 			</BrowserRouter>
@@ -28,5 +29,3 @@ function App() {
 }
 
 export default App;
-
-// [{name:country,value:""},{name:""}]

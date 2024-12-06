@@ -32,7 +32,6 @@ export const citiesApi = createApi({
 			transformResponse: (response) => {
 				return response.data.map((country) => {
 					const totalPopulation = Number(country.populationCounts[0].value);
-					console.log(totalPopulation, "totalPopulation");
 					return {
 						...country,
 						name: country.country,
@@ -41,8 +40,29 @@ export const citiesApi = createApi({
 				});
 			},
 		}),
+		getSingleCityPopulation: builder.mutation({
+			query: (city) => ({
+				url: "countries/population/cities",
+				method: "POST",
+				body: { city: city },
+			}),
+			transformResponse: (response) => {
+				return [
+					{
+						...response.data,
+						name: response.data.city,
+						totalPopulation: Number(
+							response.data.populationCounts[0]?.value || 0
+						),
+					},
+				];
+			},
+		}),
 	}),
 });
 
-export const { useGetCityPopulationMutation, useGetAllCountriesQuery } =
-	citiesApi;
+export const {
+	useGetCityPopulationMutation,
+	useGetAllCountriesQuery,
+	useGetSingleCityPopulationMutation,
+} = citiesApi;

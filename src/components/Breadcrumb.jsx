@@ -1,10 +1,9 @@
 import React from "react";
-import { Link, useParams, useNavigate } from "react-router-dom";
+import { Link, useParams, useNavigate, useLocation } from "react-router-dom";
 
 const Breadcrumb = () => {
-	const { country, state, city } = useParams();
+	const { country, city } = useParams();
 	const navigate = useNavigate();
-
 	return (
 		<div className='breadcrumb'>
 			<Link to='/' className='breadcrumb-item'>
@@ -16,17 +15,6 @@ const Breadcrumb = () => {
 					<span className='separator'>/</span>
 					<Link to={`/country/${country}`} className='breadcrumb-item'>
 						{country}
-					</Link>
-				</>
-			)}
-
-			{state && (
-				<>
-					<span className='separator'>/</span>
-					<Link
-						to={`/country/${country}/state/${state}`}
-						className='breadcrumb-item'>
-						{state}
 					</Link>
 				</>
 			)}
