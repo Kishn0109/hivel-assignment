@@ -5,17 +5,15 @@ import Breadcrumb from "./Breadcrumb";
 const Layout = () => {
 	return (
 		<div className='container'>
-			<Breadcrumb />
+			<div style={{ width: "100%" }}>
+				<Breadcrumb />
+			</div>
 			<div
 				style={{
-					width: "100vw",
+					width: "99vw",
 					height: "80vh",
-					display: "flex",
-					alignItems: "center",
-					justifyContent: "center",
-					border: "2px solid red",
-					marginRight: "auto",
-					marginLeft: "auto",
+					overflowX: "auto",
+					position: "relative",
 				}}>
 				<Outlet />
 			</div>

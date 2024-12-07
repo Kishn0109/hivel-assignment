@@ -3,7 +3,6 @@ import * as d3 from "d3";
 
 const PopulationChart = ({ data, onBarClick, label = "" }) => {
 	const svgRef = useRef();
-	console.log(data, "data");
 	useEffect(() => {
 		if (!data || !data.length) return;
 
@@ -12,21 +11,14 @@ const PopulationChart = ({ data, onBarClick, label = "" }) => {
 
 		// Increased dimensions and margins
 		const margin = { top: 20, right: 50, bottom: 120, left: 120 };
-		const width = 3000 - margin.left - margin.right; // Increased width even more
+		const width = data.length * 40; // Dynamic width based on number of bars
 		const height = 600 - margin.top - margin.bottom; // Increased height
 
 		// Create SVG container with dynamic width
 		const svg = d3
 			.select(svgRef.current)
-			.attr("width", "100%") // Make SVG responsive
+			.attr("width", width + margin.left + margin.right)
 			.attr("height", height + margin.top + margin.bottom)
-			.attr(
-				"viewBox",
-				`0 0 ${width + margin.left + margin.right} ${
-					height + margin.top + margin.bottom
-				}`
-			)
-			.attr("preserveAspectRatio", "xMidYMid meet")
 			.append("g")
 			.attr("transform", `translate(${margin.left},${margin.top})`);
 
@@ -35,24 +27,24 @@ const PopulationChart = ({ data, onBarClick, label = "" }) => {
 			.scaleBand()
 			.range([0, width])
 			.domain(data.map((d) => d.name))
-			.padding(0.4); // Increased padding between bars
+			.padding(0.1); // Reduced padding to fit more bars
 
 		const y = d3
 			.scaleLinear()
 			.range([height, 0])
 			.domain([0, d3.max(data, (d) => d.totalPopulation)]); // In the click handler:
 
-		// Modified X axis
+		// Modified X axis - show fewer labels to prevent overcrowding
 		svg
 			.append("g")
 			.attr("transform", `translate(0,${height})`)
-			.call(d3.axisBottom(x).tickValues(x.domain().filter((d, i) => !(i % 5)))) // Show every 5th label
+			.call(d3.axisBottom(x).tickValues(x.domain()))
 			.selectAll("text")
-			.attr("transform", "rotate(-45)")
+			.attr("transform", "rotate(-45)") // Rotate text 45 degrees
 			.style("text-anchor", "end")
-			.style("font-size", "12px")
-			.attr("dx", "-0.8em")
-			.attr("dy", "0.15em");
+			.attr("dx", "-0.8em") // Adjust X position of text
+			.attr("dy", "-0.4em") // Adjust Y position of text
+			.style("font-size", "16px"); // Slightly smaller font size for better fit
 
 		// Modified Y axis
 		svg
@@ -62,8 +54,12 @@ const PopulationChart = ({ data, onBarClick, label = "" }) => {
 					.axisLeft(y)
 					.tickFormat((d) => d3.format(".2s")(d))
 					.ticks(10)
-			) // Explicitly set number of ticks
-			.style("font-size", "12px");
+			) // Explicitly set number of ticks'
+			.style("font-size", "24px") // Increased font size from 12px to 24px
+			.selectAll("text")
+			.attr("x", -10) // Adjust horizontal position of labels
+			.attr("dy", "0.1em") // Adjust vertical alignment
+			.style("margin-right", "15px"); // Add spacing between text and axis
 
 		// Create bars
 		svg
@@ -115,6 +111,41 @@ const PopulationChart = ({ data, onBarClick, label = "" }) => {
 			)
 			.style("text-anchor", "middle")
 			.text(label);
+		// Add the wrap function
+		function wrap(text, width) {
+			text.each(function () {
+				var text = d3.select(this),
+					words = text.text().split(/\s+/).reverse(),
+					word,
+					line = [],
+					lineNumber = 0,
+					lineHeight = 1.1, // ems
+					y = text.attr("y"),
+					dy = parseFloat(text.attr("dy")),
+					tspan = text
+						.text(null)
+						.append("tspan")
+						.attr("x", 0)
+						.attr("y", y)
+						.attr("dy", dy + "em");
+
+				while ((word = words.pop())) {
+					line.push(word);
+					tspan.text(line.join(" "));
+					if (tspan.node().getComputedTextLength() > width) {
+						line.pop();
+						tspan.text(line.join(" "));
+						line = [word];
+						tspan = text
+							.append("tspan")
+							.attr("x", 0)
+							.attr("y", y)
+							.attr("dy", ++lineNumber * lineHeight + dy + "em")
+							.text(word);
+					}
+				}
+			});
+		}
 	}, [data]);
 
 	return (

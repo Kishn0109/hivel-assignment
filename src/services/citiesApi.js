@@ -34,7 +34,7 @@ export const citiesApi = createApi({
 					const totalPopulation = Number(country.populationCounts[0].value);
 					return {
 						...country,
-						name: country.country,
+						name: country.code,
 						totalPopulation,
 					};
 				});

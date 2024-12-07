@@ -6,7 +6,7 @@ import CountryPopulation from "./components/CountryPopulation";
 import StatePopulation from "./components/StatePopulation";
 import CityPopulation from "./components/CityPopulation";
 import Layout from "./components/Layout";
-
+import "./App.css";
 function App() {
 	return (
 		<Provider store={store}>
