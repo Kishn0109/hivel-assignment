@@ -43,9 +43,6 @@ const CountryPopulation = () => {
 		<>
 			<PopulationChart
 				data={countries}
-				onBarClick={(barData) => {
-					navigate(`/country/${barData.name}`);
-				}}
 				label='Countries'
 				renderPopup={renderPopup}
 			/>

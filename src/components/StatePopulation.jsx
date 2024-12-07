@@ -52,14 +52,7 @@ export default function StatePopulation() {
 			{isLoading ? (
 				<SkeletonLoader />
 			) : (
-				<PopulationChart
-					data={data}
-					label='Cities'
-					onBarClick={(barData) => {
-						navigate(`/country/${country}/city/${barData.name}`);
-					}}
-					renderPopup={renderPopup}
-				/>
+				<PopulationChart data={data} label='Cities' renderPopup={renderPopup} />
 			)}
 		</>
 	);

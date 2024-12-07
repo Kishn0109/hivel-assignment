@@ -1,7 +1,13 @@
 import React, { useEffect, useRef } from "react";
 import * as d3 from "d3";
 
-const PopulationChart = ({ data, onBarClick, label = "", renderPopup }) => {
+const PopulationChart = ({
+	data,
+	label = "",
+	renderPopup,
+	chartWidth,
+	rotate,
+}) => {
 	const svgRef = useRef();
 	useEffect(() => {
 		// Add scroll event listener to chart container
@@ -30,7 +36,7 @@ const PopulationChart = ({ data, onBarClick, label = "", renderPopup }) => {
 		d3.select(svgRef.current).selectAll("*").remove();
 
 		const margin = { top: 20, right: 50, bottom: 120, left: 120 };
-		const width = data.length * 40;
+		const width = chartWidth || data.length * 40;
 		const height = 600 - margin.top - margin.bottom;
 
 		// Create SVG container with dynamic width
@@ -59,10 +65,10 @@ const PopulationChart = ({ data, onBarClick, label = "", renderPopup }) => {
 			.attr("transform", `translate(0,${height})`)
 			.call(d3.axisBottom(x).tickValues(x.domain()))
 			.selectAll("text")
-			.attr("transform", "rotate(-45)") // Rotate text 45 degrees
+			.attr("transform", `rotate(${rotate || -45})`) // Rotate text 45 degrees
 			.style("text-anchor", "end")
-			.attr("dx", "-0.8em") // Adjust X position of text
-			.attr("dy", "-0.4em") // Adjust Y position of text
+			// .attr("dx", "-0.8em") // Adjust X position of text
+			// .attr("dy", "-0.4em") // Adjust Y position of text
 			.style("font-size", "16px"); // Slightly smaller font size for better fit
 
 		// Modified Y axis

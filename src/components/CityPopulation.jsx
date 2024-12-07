@@ -31,10 +31,9 @@ const CityPopulation = () => {
 			) : (
 				<PopulationChart
 					data={cities}
-					onBarClick={(barData) => {
-						console.log("City clicked:", barData.name);
-					}}
-					label='Cities'
+					label='City'
+					chartWidth={1000}
+					rotate={1}
 				/>
 			)}
 		</>
