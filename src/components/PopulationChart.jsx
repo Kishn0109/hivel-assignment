@@ -4,15 +4,34 @@ import * as d3 from "d3";
 const PopulationChart = ({ data, onBarClick, label = "", renderPopup }) => {
 	const svgRef = useRef();
 	useEffect(() => {
+		// Add scroll event listener to chart container
+		const container = document.querySelector(".chart-container");
+
+		const handleScroll = () => {
+			// Remove popup when scrolling
+			const popup = document.querySelector(".popup-card");
+			if (popup) {
+				popup.remove();
+			}
+		};
+
+		container?.addEventListener("scroll", handleScroll);
+
+		// Cleanup listener on component unmount
+		return () => {
+			container?.removeEventListener("scroll", handleScroll);
+		};
+	}, []); // Empty dependency array since we only want to set this up once
+
+	useEffect(() => {
 		if (!data || !data.length) return;
 
 		// Clear any existing chart
 		d3.select(svgRef.current).selectAll("*").remove();
 
-		// Increased dimensions and margins
 		const margin = { top: 20, right: 50, bottom: 120, left: 120 };
-		const width = data.length * 40; // Dynamic width based on number of bars
-		const height = 600 - margin.top - margin.bottom; // Increased height
+		const width = data.length * 40;
+		const height = 600 - margin.top - margin.bottom;
 
 		// Create SVG container with dynamic width
 		const svg = d3
@@ -114,22 +133,22 @@ const PopulationChart = ({ data, onBarClick, label = "", renderPopup }) => {
 					popup.html(renderPopup(d));
 				} else {
 					popup.html(`
-        <div style="position: relative">
-          <button 
-              onclick="this.parentElement.parentElement.remove()" 
-              style="position: absolute; right: 5px; top: 5px; border: none; background: none; cursor: pointer; font-size: 18px;"
-          >
-              ×
-          </button>
-          <h3 style="margin: 0 0 15px 0; padding-right: 20px">
-            <strong>Name: </strong><br/>${d.name}</h3>
-          <div style="margin-bottom: 10px">
-              <strong>Population:</strong><br/> ${d3.format(",.0f")(
-								d.totalPopulation
-							)}
-          </div>
-        </div>
-      `);
+            <div style="position: relative">
+              <button 
+                  onclick="this.parentElement.parentElement.remove()" 
+                  style="position: absolute; right: 5px; top: 5px; border: none; background: none; cursor: pointer; font-size: 18px;"
+              >
+                  ×
+              </button>
+              <h3 style="margin: 0 0 15px 0; padding-right: 20px">
+                <strong>Name: </strong><br/>${d.name}</h3>
+              <div style="margin-bottom: 10px">
+                  <strong>Population:</strong><br/> ${d3.format(",.0f")(
+										d.totalPopulation
+									)}
+              </div>
+            </div>
+         `);
 				}
 				// Stop the click event from bubbling up
 				event.stopPropagation();
