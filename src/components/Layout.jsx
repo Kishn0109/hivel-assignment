@@ -10,10 +10,11 @@ const Layout = () => {
 			</div>
 			<div
 				style={{
-					width: "99vw",
-					height: "80vh",
-					overflowX: "auto",
 					position: "relative",
+					flex: 1,
+					display: "flex",
+					justifyContent: "center",
+					alignItems: "center",
 				}}>
 				<Outlet />
 			</div>

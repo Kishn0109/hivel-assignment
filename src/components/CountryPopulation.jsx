@@ -2,13 +2,13 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useGetAllCountriesQuery } from "../services/citiesApi";
 import PopulationChart from "./PopulationChart";
-
+import SkeletonLoader from "./SkeletonLoader";
 const CountryPopulation = () => {
 	const navigate = useNavigate();
 	const { data: countries, isLoading } = useGetAllCountriesQuery();
 
 	if (isLoading) {
-		return <div>Loading...</div>;
+		return <SkeletonLoader />;
 	}
 
 	return (

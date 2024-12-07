@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import PopulationChart from "./PopulationChart";
 import { useGetSingleCityPopulationMutation } from "../services/citiesApi";
+import SkeletonLoader from "./SkeletonLoader";
 
 const CityPopulation = () => {
 	const { country, city } = useParams();
@@ -26,7 +27,7 @@ const CityPopulation = () => {
 	return (
 		<>
 			{isLoading ? (
-				<div>Loading...</div>
+				<SkeletonLoader />
 			) : (
 				<PopulationChart
 					data={cities}
