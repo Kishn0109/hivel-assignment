@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import * as d3 from "d3";
 
-const PopulationChart = ({ data, onBarClick, label = "" }) => {
+const PopulationChart = ({ data, onBarClick, label = "", renderPopup }) => {
 	const svgRef = useRef();
 	useEffect(() => {
 		if (!data || !data.length) return;
@@ -90,7 +90,66 @@ const PopulationChart = ({ data, onBarClick, label = "" }) => {
 				svg.selectAll(".tooltip").remove();
 			}) // Add click handler here
 			.on("click", function (event, d) {
-				onBarClick?.(d);
+				// Remove any existing popup
+				d3.select(".popup-card").remove();
+
+				// Create popup card
+				const popup = d3
+					.select("body")
+					.append("div")
+					.attr("class", "popup-card")
+					.style("position", "absolute")
+					.style("left", `${event.pageX + 10}px`)
+					.style("top", `${event.pageY - 10}px`)
+					.style("background", "white")
+					.style("padding", "15px")
+					.style("border-radius", "8px")
+					.style("box-shadow", "0 2px 10px rgba(0,0,0,0.1)")
+					.style("z-index", "1000")
+					.style("min-width", "250px");
+
+				// Add content to popup
+				// Use custom popup content if provided, otherwise use default
+				if (renderPopup) {
+					popup.html(renderPopup(d));
+				} else {
+					popup.html(`
+        <div style="position: relative">
+          <button 
+              onclick="this.parentElement.parentElement.remove()" 
+              style="position: absolute; right: 5px; top: 5px; border: none; background: none; cursor: pointer; font-size: 18px;"
+          >
+              ×
+          </button>
+          <h3 style="margin: 0 0 15px 0; padding-right: 20px">
+            <strong>Name: </strong><br/>${d.name}</h3>
+          <div style="margin-bottom: 10px">
+              <strong>Population:</strong><br/> ${d3.format(",.0f")(
+								d.totalPopulation
+							)}
+          </div>
+        </div>
+      `);
+				}
+				// Stop the click event from bubbling up
+				event.stopPropagation();
+
+				// Create handler for outside clicks
+				function handleOutsideClick(e) {
+					const popupElement = document.querySelector(".popup-card");
+					if (popupElement && !popupElement.contains(e.target)) {
+						popupElement.remove();
+						document.removeEventListener("click", handleOutsideClick);
+					}
+				}
+
+				// Make handler available globally for the close button
+				window._handleOutsideClick = handleOutsideClick;
+
+				// Add click listener to document
+				setTimeout(() => {
+					document.addEventListener("click", handleOutsideClick);
+				}, 0);
 			});
 
 		// Add labels
@@ -112,40 +171,6 @@ const PopulationChart = ({ data, onBarClick, label = "" }) => {
 			.style("text-anchor", "middle")
 			.text(label);
 		// Add the wrap function
-		function wrap(text, width) {
-			text.each(function () {
-				var text = d3.select(this),
-					words = text.text().split(/\s+/).reverse(),
-					word,
-					line = [],
-					lineNumber = 0,
-					lineHeight = 1.1, // ems
-					y = text.attr("y"),
-					dy = parseFloat(text.attr("dy")),
-					tspan = text
-						.text(null)
-						.append("tspan")
-						.attr("x", 0)
-						.attr("y", y)
-						.attr("dy", dy + "em");
-
-				while ((word = words.pop())) {
-					line.push(word);
-					tspan.text(line.join(" "));
-					if (tspan.node().getComputedTextLength() > width) {
-						line.pop();
-						tspan.text(line.join(" "));
-						line = [word];
-						tspan = text
-							.append("tspan")
-							.attr("x", 0)
-							.attr("y", y)
-							.attr("dy", ++lineNumber * lineHeight + dy + "em")
-							.text(word);
-					}
-				}
-			});
-		}
 	}, [data]);
 
 	return (
